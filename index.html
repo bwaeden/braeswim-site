@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jilldorada · Swim, engineered. Coming soon.</title>
+  <meta name="description" content="Jilldorada is a new luxury swim label born in Malibu: triangle bikinis with fine lingerie engineering underneath. Sexy, supportive, sized A to H. Join the waitlist.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Jilldorada · Swim, engineered.">
+  <meta property="og:description" content="Made to flatter. Built to hold. Join the waitlist for first access to the debut drop.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FAF6EF'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='38' fill='%238A5606'%3EJ%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ════════════════════════════════════════════════════════════════════
+       JILLDORADA DESIGN TOKENS
+       Shopify port: these variables map 1:1 to theme settings
+       (config/settings_schema.json → colors + typography groups).
+       Source of truth: design-system/jilldorada/MASTER.md
+       ════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* Color - golden sand & cream */
+      --cream:        #FAF6EF;  /* page background */
+      --cream-deep:   #F3EBDD;  /* alternate section background */
+      --surface:      #FFFDF8;  /* cards, form fields */
+      --sand:         #E7D9BF;  /* decorative lines on gradients */
+      --border:       #E8DECB;  /* hairlines, card borders */
+      --gold-deco:    #C9A961;  /* decorative gold - never body text */
+      --gold-text:    #8A5606;  /* gold for small text/labels (AA on cream) */
+      --ink:          #2B2118;  /* primary text, buttons */
+      --ink-soft:     #6B5B45;  /* muted text (AA on cream) */
+      --error:        #B3261E;
+
+      /* Typography */
+      --font-script:  'Great Vibes', cursive;      /* wordmark + accents only */
+      --font-serif:   'Cormorant', Georgia, serif;  /* editorial headings */
+      --font-sans:    'Montserrat', -apple-system, sans-serif; /* body + UI */
+
+      /* Spacing - spacious editorial rhythm */
+      --space-section: clamp(6rem, 12vw, 9.5rem);
+      --space-block:   clamp(2.5rem, 5vw, 4rem);
+      --container:     72rem;
+      --container-text: 42rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(.22,.61,.36,1);
+      --t-micro: 200ms;
+      --t-reveal: 650ms;
+    }
+
+    /* ── Reset / base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 1.0625rem;
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    .container { max-width: var(--container); margin-inline: auto; padding-inline: clamp(1.25rem, 5vw, 3rem); }
+
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 100;
+      background: var(--ink); color: var(--cream); padding: .75rem 1.25rem;
+      font-size: .8125rem; letter-spacing: .08em; text-decoration: none;
+    }
+    .skip-link:focus { left: 0; }
+
+    /* Type helpers */
+    .micro {
+      font-family: var(--font-sans);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold-text);
+    }
+    .serif-h {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      line-height: 1.12;
+      letter-spacing: .005em;
+      color: var(--ink);
+    }
+    .script-accent { font-family: var(--font-script); font-weight: 400; color: var(--gold-text); }
+
+    :focus-visible { outline: 2px solid var(--gold-text); outline-offset: 3px; border-radius: 2px; }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: HEADER  (Shopify port → sections/header.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .site-header {
+      position: fixed; inset: 0 0 auto 0; z-index: 50;
+      background: color-mix(in srgb, var(--cream) 82%, transparent);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+      padding-top: env(safe-area-inset-top);
+    }
+    .site-header .container {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4.25rem;
+    }
+    .header-wordmark {
+      font-family: var(--font-script); font-size: 1.75rem; color: var(--ink);
+      text-decoration: none; line-height: 1; padding-top: .35rem; /* script fonts ride high */
+    }
+    .header-cta {
+      position: relative; overflow: hidden;
+      display: inline-flex; align-items: center; gap: .55rem;
+      padding: .65rem 1.3rem; border-radius: 999px;
+      background: var(--ink); color: var(--cream);
+      font-family: var(--font-serif); font-size: .875rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer;
+      transition: background-color var(--t-micro) var(--ease-out), transform var(--t-micro) var(--ease-out);
+    }
+    .header-cta:hover { background: var(--gold-text); transform: translateY(-1px); }
+    .header-cta:active { transform: scale(.97); }
+    .header-cta-gem {
+      width: 15px; height: 15px; color: var(--gold-deco); flex-shrink: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .header-cta::after { /* brief golden shimmer, long rest - noticeable, not nagging */
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(115deg, transparent 30%, rgba(201,169,97,.55) 50%, transparent 70%);
+        transform: translateX(-110%);
+        animation: cta-shimmer 7s var(--ease-out) infinite;
+      }
+      .header-cta-gem { animation: gem-twinkle 7s ease-in-out infinite; }
+    }
+    @keyframes cta-shimmer {
+      0% { transform: translateX(-110%); }
+      12% { transform: translateX(110%); }
+      100% { transform: translateX(110%); }
+    }
+    @keyframes gem-twinkle {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      6% { transform: scale(1.25); opacity: .75; }
+      12% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: HERO  (Shopify port → sections/hero-waitlist.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh; min-height: 100svh;
+      display: flex; align-items: center;
+      padding: calc(4.25rem + var(--space-block)) 0 var(--space-block);
+      background:
+        radial-gradient(ellipse 90% 65% at 78% 12%, #F2DDB4 0%, transparent 62%),
+        radial-gradient(ellipse 75% 60% at 12% 42%, #F8E6D3 0%, transparent 58%),
+        radial-gradient(ellipse 100% 55% at 55% 105%, #EFDFC0 0%, transparent 55%),
+        var(--cream);
+    }
+    .hero::after { /* film grain for editorial depth */
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+      opacity: .05;
+    }
+    .hero-inner { position: relative; z-index: 1; width: 100%; text-align: center; }
+    .hero-kicker { margin-bottom: 1.5rem; }
+    .hero-wordmark {
+      font-family: var(--font-script); font-weight: 400;
+      font-size: clamp(4.25rem, 15vw, 10.5rem);
+      line-height: 1.15;
+      color: var(--ink);
+      margin: 0 0 .75rem;
+      transform: translateX(-0.16em); /* optical centering: the J's swash pulls the mass right */
+    }
+    .hero-headline {
+      font-family: var(--font-serif); font-weight: 400; font-style: italic;
+      font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+      line-height: 1.25;
+      color: var(--ink);
+      margin-bottom: 1.75rem;
+    }
+    .hero-sub {
+      max-width: 38rem; margin: 0 auto 3.25rem;
+      color: var(--ink-soft); font-size: 1.125rem; font-weight: 400;
+    }
+
+    /* ── Signup form (shared component; Shopify port → newsletter block +
+         Kit embed, list lives in Kit either way) ─────────────────── */
+    .signup { max-width: 30rem; margin-inline: auto; text-align: left; }
+    .signup-label { display: block; margin: 0 0 .5rem .25rem; }
+    .signup-row {
+      display: flex; gap: .5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .375rem;
+      transition: border-color var(--t-micro) var(--ease-out), box-shadow var(--t-micro) var(--ease-out);
+    }
+    .signup-row:focus-within { border-color: var(--gold-deco); box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold-deco) 18%, transparent); }
+    .signup input[type="email"] {
+      flex: 1; min-width: 0; min-height: 2.75rem;
+      border: 0; background: transparent;
+      font-family: var(--font-sans); font-size: 1rem; color: var(--ink);
+      padding-left: 1.1rem;
+    }
+    .signup input[type="email"]::placeholder { color: color-mix(in srgb, var(--ink-soft) 70%, transparent); }
+    .signup input[type="email"]:focus { outline: none; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      min-height: 2.75rem; padding: .7rem 1.75rem;
+      background: var(--ink); color: var(--cream);
+      border: 0; border-radius: 999px; cursor: pointer;
+      font-family: var(--font-serif); font-size: .9375rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
+      transition: background-color var(--t-micro) var(--ease-out), transform var(--t-micro) var(--ease-out);
+    }
+    .btn:hover { background: var(--gold-text); }
+    .btn:active { transform: scale(.97); }
+    .btn[disabled] { opacity: .55; cursor: default; }
+    .btn .spinner { display: none; width: 1rem; height: 1rem; animation: spin 800ms linear infinite; }
+    .btn.is-loading .spinner { display: block; }
+    .btn.is-loading .btn-label { opacity: .7; }
+    @keyframes spin { to { transform: rotate(1turn); } }
+
+    .signup-note { margin: .8rem .25rem 0; font-size: .8125rem; color: var(--ink-soft); text-align: center; }
+    .signup-msg { margin: .6rem .25rem 0; font-size: .875rem; font-weight: 500; }
+    .signup-msg.is-error { color: var(--error); }
+    .signup-msg.is-success { color: var(--gold-text); }
+    .signup-success {
+      position: relative;
+      display: none; text-align: center; padding: 1.75rem 1.25rem;
+      border: 1px solid var(--gold-deco); border-radius: 1rem; background: var(--surface);
+    }
+    .signup-success .script-accent { font-size: 2.2rem; line-height: 1.2; display: block; margin-bottom: .35rem; }
+    .signup.is-done .signup-row, .signup.is-done .signup-label,
+    .signup.is-done .signup-note, .signup.is-done .signup-msg { display: none; }
+    .signup.is-done .signup-success { display: block; }
+
+    /* Success choreography: form bows out, card rises in with a stagger */
+    .signup.is-leaving .signup-label, .signup.is-leaving .signup-row,
+    .signup.is-leaving .signup-note, .signup.is-leaving .signup-msg {
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .signup.is-done .signup-success { animation: card-in 550ms var(--ease-out) both; }
+      .signup.is-done .signup-success > * { opacity: 0; animation: rise-in 500ms var(--ease-out) forwards; }
+      .signup.is-done .signup-success > :nth-child(1) { animation-delay: 120ms; }
+      .signup.is-done .signup-success > :nth-child(2) { animation-delay: 300ms; }
+      .signup.is-done .signup-success > :nth-child(3) { animation-delay: 520ms; }
+      .signup.is-done .signup-success > :nth-child(4) { animation-delay: 720ms; }
+      .signup.is-done .signup-success > .gold-dust { animation: none; opacity: 1; }
+      .success-saved:not([hidden]) { animation: rise-in 400ms var(--ease-out); }
+    }
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(16px) scale(.985); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    .gold-dust { position: absolute; inset: 0; pointer-events: none; }
+    .gold-dust span {
+      position: absolute; bottom: 18%; left: var(--x);
+      width: var(--s); height: var(--s); background: var(--gold-deco);
+      transform: rotate(45deg); opacity: 0;
+      animation: dust-rise 1.5s var(--ease-out) forwards; animation-delay: var(--d);
+    }
+    @keyframes dust-rise {
+      0% { opacity: 0; transform: translateY(0) rotate(45deg); }
+      15% { opacity: .9; }
+      100% { opacity: 0; transform: translateY(-95px) rotate(225deg); }
+    }
+
+    /* Post-signup extras: optional size capture + share prompt */
+    .success-step { border-top: 1px solid var(--border); margin-top: 1.4rem; padding-top: 1.4rem; }
+    .success-lede { font-size: .875rem; color: var(--ink-soft); margin-bottom: .9rem; }
+    .size-row, .share-row { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
+    .size-row[hidden] { display: none; }
+    .size-row select {
+      min-height: 2.5rem; padding: 0 .9rem; min-width: 5.25rem;
+      background: var(--surface); color: var(--ink);
+      border: 1px solid var(--border); border-radius: 999px;
+      font-family: var(--font-sans); font-size: .9375rem; cursor: pointer;
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 2.5rem; padding: .55rem 1.4rem;
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--ink); border-radius: 999px; cursor: pointer;
+      font-family: var(--font-serif); font-size: .875rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+      transition: color var(--t-micro) var(--ease-out), border-color var(--t-micro) var(--ease-out), transform var(--t-micro) var(--ease-out);
+    }
+    .btn-ghost:hover { color: var(--gold-text); border-color: var(--gold-text); }
+    .btn-ghost:active { transform: scale(.97); }
+    .success-saved { margin-top: .9rem; font-size: .875rem; font-weight: 500; color: var(--gold-text); }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: MARQUEE  (Shopify port → sections/announcement-marquee.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .marquee {
+      border-block: 1px solid var(--border);
+      background: var(--cream);
+      overflow: hidden; padding: 1rem 0;
+    }
+    .marquee-track {
+      display: flex; gap: 3rem; width: max-content;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-group { display: flex; gap: 3rem; align-items: center; }
+    .marquee-item {
+      display: flex; align-items: center; gap: 3rem;
+      font-size: .75rem; font-weight: 600; letter-spacing: .26em;
+      text-transform: uppercase; color: var(--ink-soft); white-space: nowrap;
+    }
+    .marquee-item::after {
+      content: ""; width: 5px; height: 5px; background: var(--gold-deco);
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: STORY / THE PROBLEM  (Shopify port → sections/editorial-story.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .story { padding: var(--space-section) 0; }
+    .story-inner { max-width: var(--container-text); margin-inline: auto; text-align: center; }
+    .story .micro { display: block; margin-bottom: 1.5rem; }
+    .story-quote {
+      font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+      margin-bottom: var(--space-block);
+    }
+    .story-quote em { font-style: italic; color: var(--gold-text); }
+    .story p { color: var(--ink-soft); margin-bottom: 1.6rem; text-align: left; }
+    .story p strong { color: var(--ink); font-weight: 600; }
+
+    .hairline { width: 3.5rem; height: 1px; background: var(--gold-deco); margin: var(--space-block) auto 0; }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: ENGINEERING TRIO  (Shopify port → sections/feature-trio.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .features { padding: var(--space-section) 0; background: var(--cream-deep); }
+    .features-head { text-align: center; max-width: var(--container-text); margin: 0 auto var(--space-block); }
+    .features-head .micro { display: block; margin-bottom: 1.5rem; }
+    .features-head h2 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); }
+    .features-grid {
+      display: grid; gap: 1.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 3rem 2.25rem 2.75rem;
+      text-align: center;
+      transition: transform var(--t-micro) var(--ease-out), box-shadow var(--t-micro) var(--ease-out);
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(43,33,24,.18); }
+    .feature-icon {
+      width: 4.75rem; height: 4.75rem; margin: 0 auto 1.6rem;
+      display: grid; place-items: center;
+      border: 1px solid var(--gold-deco); border-radius: 50%;
+      color: var(--gold-text);
+    }
+    .feature-card h3 { font-family: var(--font-serif); font-weight: 600; font-size: 1.45rem; line-height: 1.25; margin-bottom: .75rem; }
+    .feature-card p { font-size: 1rem; color: var(--ink-soft); }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: SIZE PROMISE  (Shopify port → sections/size-promise.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .sizes { padding: var(--space-section) 0; text-align: center; }
+    .sizes .micro { display: block; margin-bottom: 1.5rem; }
+    .sizes h2 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); margin-bottom: 3rem; }
+    .size-run {
+      display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap;
+      gap: clamp(.8rem, 3.5vw, 2rem);
+      font-family: var(--font-serif); font-weight: 300;
+      font-size: clamp(2.4rem, 7vw, 4.6rem); line-height: 1;
+      color: var(--ink);
+      margin-bottom: 3rem;
+    }
+    .size-run span { position: relative; }
+    .size-run span:not(:last-child)::after {
+      content: ""; position: absolute; right: calc(-.5 * clamp(.8rem, 3.5vw, 2rem)); top: 50%;
+      width: 4px; height: 4px; background: var(--gold-deco); transform: translate(50%,-50%) rotate(45deg);
+    }
+    .sizes-copy { max-width: 34rem; margin-inline: auto; color: var(--ink-soft); }
+    .sizes-copy .script-accent { font-size: 1.9rem; display: block; margin-top: 2rem; }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: FIT FAQ  (Shopify port → sections/faq.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .faq { padding: 0 0 var(--space-section); }
+    .faq-inner { max-width: var(--container-text); margin-inline: auto; }
+    .faq .micro { display: block; text-align: center; margin-bottom: 2.5rem; }
+    .faq details { border-top: 1px solid var(--border); }
+    .faq details:last-of-type { border-bottom: 1px solid var(--border); }
+    .faq summary {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.7rem .25rem; cursor: pointer; list-style: none;
+      font-family: var(--font-serif); font-weight: 500; font-size: 1.35rem; color: var(--ink);
+      transition: color var(--t-micro) var(--ease-out);
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+"; font-family: var(--font-serif); font-weight: 300; font-size: 1.6rem;
+      color: var(--gold-text); flex-shrink: 0; line-height: 1;
+      transition: transform var(--t-micro) var(--ease-out);
+    }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq summary:hover { color: var(--gold-text); }
+    .faq details p { padding: 0 .25rem 1.75rem; color: var(--ink-soft); font-size: 1rem; }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: FINAL CTA  (Shopify port → sections/newsletter.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .cta {
+      position: relative;
+      padding: var(--space-section) 0;
+      background:
+        radial-gradient(ellipse 85% 70% at 22% 8%, #F2DDB4 0%, transparent 60%),
+        radial-gradient(ellipse 80% 65% at 85% 90%, #F8E6D3 0%, transparent 58%),
+        var(--cream-deep);
+      border-block: 1px solid var(--border);
+      text-align: center;
+    }
+    .cta .script-accent { font-size: clamp(2.4rem, 6vw, 3.6rem); display: block; margin-bottom: 1rem; }
+    .cta h2 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); margin-bottom: 1.25rem; }
+    .cta-sub { max-width: 32rem; margin: 0 auto 3rem; color: var(--ink-soft); }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: FOOTER  (Shopify port → sections/footer.liquid)
+       ════════════════════════════════════════════════════════════════ */
+    .site-footer { background: var(--ink); color: #F5EDDD; padding: 4rem 0 3rem; }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
+    .footer-wordmark { font-family: var(--font-script); font-size: 2.4rem; line-height: 1.3; }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+    .footer-links a {
+      font-size: .75rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+      color: #F5EDDD; text-decoration: none; opacity: .85;
+      transition: opacity var(--t-micro) var(--ease-out);
+    }
+    .footer-links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+    .footer-fine { font-size: .75rem; opacity: .55; letter-spacing: .06em; }
+
+    /* ── Scroll reveal (JS adds .js; motion-safe only) ─────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+      html.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity var(--t-reveal) var(--ease-out), transform var(--t-reveal) var(--ease-out); }
+      html.js .reveal.in { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .marquee-track { animation: none; }
+      .btn, .feature-card { transition: none; }
+    }
+
+    @media (max-width: 34rem) {
+      .signup-row { flex-direction: column; border-radius: 1.4rem; padding: .5rem; }
+      .signup input[type="email"] { padding: .55rem 1rem; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
+  <header class="site-header">
+    <div class="container">
+      <a class="header-wordmark" href="#top" aria-label="Jilldorada home">Jilldorada</a>
+      <a class="header-cta" href="#join"><svg class="header-cta-gem" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 7 20, 3.6 15, 3 9.5 C 6 5.5, 18 5.5, 21 9.5 C 20.4 15, 17 20, 12 21 Z"/><path d="M12 21 L6.8 8.2"/><path d="M12 21 L12 6.4"/><path d="M12 21 L17.2 8.2"/></svg>Be first</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ═══ HERO ═══════════════════════════════════════════════════ -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <p class="micro hero-kicker">Swim &middot; Coming soon</p>
+        <h1 class="hero-wordmark">Jilldorada</h1>
+        <p class="hero-headline serif-h">Made to flatter. Built to hold.</p>
+        <p class="hero-sub">A triangle bikini built on lingerie engineering. All-day comfort, effortlessly sexy, in every size A&nbsp;to&nbsp;H.</p>
+
+        <!-- Signup #1 · list lives in Kit → portable to Shopify untouched -->
+        <form class="signup" data-signup novalidate>
+          <label class="micro signup-label" for="email-hero">Email</label>
+          <div class="signup-row">
+            <input id="email-hero" name="email_address" type="email" autocomplete="email" inputmode="email" required placeholder="you@goldenhour.com">
+            <button class="btn" type="submit">
+              <svg class="spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+              <span class="btn-label">Sign up</span>
+            </button>
+          </div>
+          <p class="signup-note">Sign up and receive early access + 10% off the first drop.</p>
+          <p class="signup-msg" role="status" aria-live="polite"></p>
+          <div class="signup-success">
+            <span class="script-accent">golden.</span>
+            <p>You&rsquo;re on the list! Keep an eye on your emails for updates and discounts.</p>
+            <div class="success-step" data-size-step>
+              <p class="success-lede">One thing that helps: your size, so it&rsquo;s cut and waiting on day one.</p>
+              <div class="size-row">
+                <select data-band aria-label="Band size">
+                  <option value="" selected>Band</option>
+                  <option>26</option><option>28</option><option>30</option><option>32</option>
+                  <option>34</option><option>36</option><option>38</option><option>40</option>
+                </select>
+                <select data-cup aria-label="Cup size">
+                  <option value="" selected>Cup</option>
+                  <option>A</option><option>B</option><option>C</option><option>D</option>
+                  <option>DD</option><option>E</option><option>F</option><option>G</option><option>H</option>
+                </select>
+                <button type="button" class="btn-ghost" data-size-save>Save my size</button>
+              </div>
+              <p class="success-saved" data-size-saved hidden></p>
+            </div>
+            <div class="success-step">
+              <p class="success-lede">Know someone who&rsquo;s given up on triangle tops? Send her this.</p>
+              <div class="share-row">
+                <button type="button" class="btn-ghost" data-share>Share</button>
+                <button type="button" class="btn-ghost" data-copy>Copy link</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══ MARQUEE ════════════════════════════════════════════════ -->
+    <aside class="marquee" aria-label="Highlights">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span class="marquee-item">Nothing spills</span>
+          <span class="marquee-item">One cut, A&ndash;H</span>
+          <span class="marquee-item">Slim straps, no dig</span>
+          <span class="marquee-item">Bra-grade engineering</span>
+          <span class="marquee-item">Tan lines, by design</span>
+          <span class="marquee-item">Recycled ocean nylon</span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span class="marquee-item">Nothing spills</span>
+          <span class="marquee-item">One cut, A&ndash;H</span>
+          <span class="marquee-item">Slim straps, no dig</span>
+          <span class="marquee-item">Bra-grade engineering</span>
+          <span class="marquee-item">Tan lines, by design</span>
+          <span class="marquee-item">Recycled ocean nylon</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ═══ STORY / THE PROBLEM ════════════════════════════════════ -->
+    <section class="story">
+      <div class="container story-inner reveal">
+        <span class="micro">Our vision</span>
+        <h2 class="serif-h story-quote">You could have pretty.<br>You could have support.<br>Never both. <em>Until now.</em></h2>
+        <p><strong>The way we see it:</strong> most bikinis are only meant for one body style. That&rsquo;s why they gap, shift, and spill. It was never your body&rsquo;s issue, rather the companies who made it.</p>
+        <p>Founded and created by Jillian, a Malibu native who grew up in the water but could never find a suit that supported her style. By mixing California surf with lingerie, Jilldorada is meant to be surfed, tanned, and stunned&nbsp;in.</p>
+        <div class="hairline" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ═══ ENGINEERING TRIO ═══════════════════════════════════════ -->
+    <section class="features">
+      <div class="container">
+        <div class="features-head reveal">
+          <span class="micro">The engineering</span>
+          <h2 class="serif-h">Design details that are secretly structure.</h2>
+        </div>
+        <div class="features-grid">
+          <article class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+                <path d="M5 25 C 21 33, 43 33, 59 25"/>
+                <path d="M5 37 C 21 45, 43 45, 59 37"/>
+                <path d="M5 25 v12"/>
+                <path d="M59 25 v12"/>
+                <path d="M12 31.5 C 26 38, 38 38, 52 31.5" stroke-width="1" stroke-dasharray="2 3.5"/>
+                <circle cx="45" cy="35.4" r="1.7" fill="currentColor" stroke="none"/>
+                <circle cx="50" cy="34.4" r="1.7" fill="currentColor" stroke="none"/>
+                <circle cx="55" cy="33" r="1.7" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+            <h3>The band</h3>
+            <p>A powermesh underband with a real hook-and-eye carries about 80% of the weight. Bra physics, invisible in a bikini.</p>
+          </article>
+          <article class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+                <path d="M21 58 L43 6"/>
+                <path d="M27 60 L49 8"/>
+                <rect x="29" y="28" width="12" height="10" rx="2" transform="rotate(-67 35 33)"/>
+              </svg>
+            </div>
+            <h3>The straps</h3>
+            <p>Slim, plush-backed straps that never dig and never wander. Your tan lines stay exactly where you left them.</p>
+          </article>
+          <article class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+                <path d="M32 7 C 17 13, 9 27, 12 49"/>
+                <path d="M32 7 C 47 13, 55 27, 52 49"/>
+                <path d="M12 49 C 25 54, 39 54, 52 49"/>
+                <path d="M32 7 C 26.5 21, 26.5 36, 32 49"/>
+              </svg>
+            </div>
+            <h3>The sculpture</h3>
+            <p>Curved seams give every cup true three-dimensional shape: lift and roundness where flat triangles fall short.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SIZE PROMISE ═══════════════════════════════════════════ -->
+    <section class="sizes">
+      <div class="container reveal">
+        <span class="micro">The promise</span>
+        <h2 class="serif-h">One design language,<br>fluent in every letter.</h2>
+        <div class="size-run" aria-label="Sizes A through H">
+          <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span>
+        </div>
+        <p class="sizes-copy">Your bra size is your bikini size. No mystery letters, no &ldquo;runs small,&rdquo; and every size gets the same engineering.
+          <span class="script-accent">one suit, every sun.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ FIT FAQ ════════════════════════════════════════════════ -->
+    <section class="faq" aria-label="Common questions">
+      <div class="container faq-inner reveal">
+        <span class="micro">FAQ</span>
+        <details>
+          <summary>How does sizing work?</summary>
+          <p>It&rsquo;s your bra size, the one that fits you in beautiful lingerie. No conversion charts, no ordering two up.</p>
+        </details>
+        <details>
+          <summary>When does the first collection drop?</summary>
+          <p>It&rsquo;s in sampling and fit-testing now. Nothing ships until it passes on real bodies, and the list hears the date first.</p>
+        </details>
+        <details>
+          <summary>What will it cost?</summary>
+          <p>Under $100 for the top, priced for the engineering it carries. Every size pays the same.</p>
+        </details>
+        <details>
+          <summary>What if it doesn&rsquo;t fit?</summary>
+          <p>Exchanges are on us. Fit is the whole point, and we&rsquo;ll move sizes with you until it&rsquo;s right.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ═══ FINAL CTA ══════════════════════════════════════════════ -->
+    <section class="cta" id="join">
+      <div class="container reveal">
+        <span class="script-accent">get in before the tide</span>
+        <h2 class="serif-h">The Megan collection arrives here first.</h2>
+        <p class="cta-sub">The list shops every drop first, with founding pricing and rewards for being early. Every size, A&ndash;H.</p>
+
+        <!-- Signup #2 -->
+        <form class="signup" data-signup novalidate>
+          <label class="micro signup-label" for="email-cta">Email</label>
+          <div class="signup-row">
+            <input id="email-cta" name="email_address" type="email" autocomplete="email" inputmode="email" required placeholder="you@goldenhour.com">
+            <button class="btn" type="submit">
+              <svg class="spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+              <span class="btn-label">Sign up</span>
+            </button>
+          </div>
+          <p class="signup-note">Sign up and receive early access + 10% off the first drop.</p>
+          <p class="signup-msg" role="status" aria-live="polite"></p>
+          <div class="signup-success">
+            <span class="script-accent">golden.</span>
+            <p>You&rsquo;re on the list! Keep an eye on your emails for updates and discounts.</p>
+            <div class="success-step" data-size-step>
+              <p class="success-lede">One thing that helps: your size, so it&rsquo;s cut and waiting on day one.</p>
+              <div class="size-row">
+                <select data-band aria-label="Band size">
+                  <option value="" selected>Band</option>
+                  <option>26</option><option>28</option><option>30</option><option>32</option>
+                  <option>34</option><option>36</option><option>38</option><option>40</option>
+                </select>
+                <select data-cup aria-label="Cup size">
+                  <option value="" selected>Cup</option>
+                  <option>A</option><option>B</option><option>C</option><option>D</option>
+                  <option>DD</option><option>E</option><option>F</option><option>G</option><option>H</option>
+                </select>
+                <button type="button" class="btn-ghost" data-size-save>Save my size</button>
+              </div>
+              <p class="success-saved" data-size-saved hidden></p>
+            </div>
+            <div class="success-step">
+              <p class="success-lede">Know someone who&rsquo;s given up on triangle tops? Send her this.</p>
+              <div class="share-row">
+                <button type="button" class="btn-ghost" data-share>Share</button>
+                <button type="button" class="btn-ghost" data-copy>Copy link</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-wordmark">Jilldorada</p>
+      <nav class="footer-links" aria-label="Social links">
+        <a href="#" data-todo="instagram">Instagram</a>
+        <a href="#" data-todo="tiktok">TikTok</a>
+        <a href="mailto:hello@example.com" data-todo="email">Contact</a>
+      </nav>
+      <p class="footer-fine">&copy; <span data-year>2026</span> Jilldorada. Swim, engineered.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════════
+       KIT (ConvertKit) SETUP - the only wiring needed before launch.
+       1. Create a free account at kit.com
+       2. Create an inline Form, copy its numeric ID
+          (the URL looks like app.kit.com/forms/designers/1234567/edit)
+       3. Paste the ID below, e.g. const KIT_FORM_ID = "1234567";
+       The same Kit form drops into Shopify later - the list carries over.
+       ══════════════════════════════════════════════════════════════ */
+    const KIT_FORM_ID = "9666887";
+
+    document.documentElement.classList.add('js');
+
+    // Scroll reveal - transform/opacity only, motion-safe gated in CSS
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Success choreography: fade the form out, stagger the card in, gold dust up
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function celebrate(form) {
+      if (prefersReducedMotion) { form.classList.add('is-done'); return; }
+      form.classList.add('is-leaving');
+      setTimeout(() => {
+        form.classList.remove('is-leaving');
+        form.classList.add('is-done');
+        const dust = document.createElement('div');
+        dust.className = 'gold-dust';
+        dust.setAttribute('aria-hidden', 'true');
+        for (let i = 0; i < 14; i++) {
+          const fleck = document.createElement('span');
+          fleck.style.setProperty('--x', (6 + Math.random() * 88) + '%');
+          fleck.style.setProperty('--s', (3 + Math.random() * 4) + 'px');
+          fleck.style.setProperty('--d', Math.round(Math.random() * 500) + 'ms');
+          dust.appendChild(fleck);
+        }
+        form.querySelector('.signup-success').appendChild(dust);
+        setTimeout(() => dust.remove(), 2400);
+      }, 260);
+    }
+
+    // Signup forms
+    document.querySelectorAll('[data-signup]').forEach((form) => {
+      const input = form.querySelector('input[type="email"]');
+      const btn = form.querySelector('.btn');
+      const msg = form.querySelector('.signup-msg');
+
+      const setMsg = (text, kind) => {
+        msg.textContent = text;
+        msg.classList.toggle('is-error', kind === 'error');
+        msg.classList.toggle('is-success', kind === 'success');
+      };
+
+      // Post-signup extras - size capture (updates the same Kit subscriber
+      // via fields[bra_size]; create the "bra_size" custom field in Kit first)
+      const bandSel = form.querySelector('[data-band]');
+      const cupSel = form.querySelector('[data-cup]');
+      const savedMsg = form.querySelector('[data-size-saved]');
+      form.querySelector('[data-size-save]').addEventListener('click', () => {
+        if (!bandSel.value || !cupSel.value) {
+          savedMsg.hidden = false;
+          savedMsg.textContent = 'Pick a band and a cup first.';
+          return;
+        }
+        const size = bandSel.value + cupSel.value;
+        if (KIT_FORM_ID) {
+          const body = new FormData();
+          body.append('email_address', input.value.trim());
+          body.append('fields[bra_size]', size);
+          fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {
+            method: 'POST', body, headers: { Accept: 'application/json' },
+          }).catch(() => {});
+        }
+        form.querySelector('.size-row').hidden = true;
+        savedMsg.hidden = false;
+        savedMsg.textContent = `Noted. ${size} will be cut and waiting.`;
+      });
+
+      // Post-signup extras - share prompt (native share, clipboard fallback)
+      const shareUrl = () => `${location.origin}${location.pathname}?ref=friend`;
+      const shareText = 'found the bikini brand for us. waitlist gets early access + 10% off the first drop';
+      const copyBtn = form.querySelector('[data-copy]');
+      form.querySelector('[data-share]').addEventListener('click', async () => {
+        if (navigator.share) {
+          try { await navigator.share({ title: 'Jilldorada', text: shareText, url: shareUrl() }); } catch (_) {}
+        } else {
+          copyBtn.click();
+        }
+      });
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl()}`);
+          copyBtn.textContent = 'Copied';
+          setTimeout(() => { copyBtn.textContent = 'Copy link'; }, 2000);
+        } catch (_) {}
+      });
+
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        setMsg('', null);
+
+        const email = input.value.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          setMsg('That address doesn’t look quite right. One more look?', 'error');
+          input.focus();
+          return;
+        }
+
+        if (!KIT_FORM_ID) {
+          // Not wired yet: make it obvious so no real signups are lost
+          setMsg('⚠ Form not connected yet. Add your Kit form ID in index.html (see README).', 'error');
+          return;
+        }
+
+        btn.disabled = true; btn.classList.add('is-loading');
+        try {
+          const body = new FormData();
+          body.append('email_address', email);
+          const res = await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`, {
+            method: 'POST', body, headers: { Accept: 'application/json' },
+          });
+          if (!res.ok) throw new Error(`Kit responded ${res.status}`);
+          celebrate(form);
+        } catch (err) {
+          setMsg('Something slipped on our end. Please try again in a moment.', 'error');
+        } finally {
+          btn.disabled = false; btn.classList.remove('is-loading');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
+  </script>
+</body>
+</html>

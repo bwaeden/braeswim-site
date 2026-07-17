@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jilldorada · Swim, engineered. Coming soon.</title>
-  <meta name="description" content="Jilldorada is a new luxury swim label born in Malibu: triangle bikinis with fine lingerie engineering underneath. Sexy, supportive, sized A to H. Join the waitlist.">
+  <title>Braeswim · Swim, engineered. Coming soon.</title>
+  <meta name="description" content="Braeswim: triangle bikinis with fine lingerie engineering underneath. Sexy, supportive, sized A to H. Join the waitlist for the debut drop.">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Jilldorada · Swim, engineered.">
+  <meta property="og:title" content="Braeswim · Swim, engineered.">
   <meta property="og:description" content="Made to flatter. Built to hold. Join the waitlist for first access to the debut drop.">
   <meta property="og:type" content="website">
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FAF6EF'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='38' fill='%238A5606'%3EJ%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23FAF6EF'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='38' fill='%238A5606'%3EB%3C/text%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,10 +19,10 @@
 
   <style>
     /* ════════════════════════════════════════════════════════════════════
-       JILLDORADA DESIGN TOKENS
+       BRAESWIM DESIGN TOKENS
        Shopify port: these variables map 1:1 to theme settings
        (config/settings_schema.json → colors + typography groups).
-       Source of truth: design-system/jilldorada/MASTER.md
+       Source of truth: design-system/braeswim/MASTER.md
        ════════════════════════════════════════════════════════════════════ */
     :root {
       /* Color - golden sand & cream */
@@ -152,41 +152,123 @@
     }
 
     /* ════════════════════════════════════════════════════════════════
-       SECTION: HERO  (Shopify port → sections/hero-waitlist.liquid)
+       SECTION: SCROLL-EXPAND OPENER  (Shopify port → sections/hero-media.liquid)
+       Native scroll scrub: the section is a tall runway, the stage is
+       sticky, and --p (0→1) is set by JS from scroll position. No wheel
+       or touch hijacking, so anchors, keyboard, and momentum all work.
        ════════════════════════════════════════════════════════════════ */
-    .hero {
-      position: relative;
-      min-height: 100vh; min-height: 100svh;
-      display: flex; align-items: center;
-      padding: calc(4.25rem + var(--space-block)) 0 var(--space-block);
+    .xpand { --p: 0; position: relative; height: 180vh; background: var(--cream); }
+    .xpand-sticky {
+      position: sticky; top: 0;
+      height: 100vh; height: 100svh;
+      overflow: clip;
+      display: flex; align-items: center; justify-content: center;
       background:
         radial-gradient(ellipse 90% 65% at 78% 12%, #F2DDB4 0%, transparent 62%),
         radial-gradient(ellipse 75% 60% at 12% 42%, #F8E6D3 0%, transparent 58%),
         radial-gradient(ellipse 100% 55% at 55% 105%, #EFDFC0 0%, transparent 55%),
         var(--cream);
     }
-    .hero::after { /* film grain for editorial depth */
+    .xpand-sticky::after { /* film grain for editorial depth */
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 180px;
       opacity: .05;
     }
+    .xpand-kicker {
+      position: absolute; z-index: 3; inset-inline: 0;
+      top: calc(4.25rem + env(safe-area-inset-top, 0px) + 2rem);
+      text-align: center;
+      opacity: calc(1 - var(--p) * 2.4);
+    }
+    .xpand-media {
+      position: relative; z-index: 1;
+      width: calc(var(--xw0) + (94vw - var(--xw0)) * var(--p));
+      height: calc(var(--xh0) + (90vh - var(--xh0)) * var(--p));
+      height: calc(var(--xh0) + (90svh - var(--xh0)) * var(--p));
+      --xw0: clamp(200px, 42vw, 330px);
+      --xh0: clamp(280px, 52svh, 440px);
+      border-radius: calc(.35rem + .9rem * (1 - var(--p)));
+      overflow: hidden;
+      box-shadow: 0 30px 90px -30px rgba(43,33,24,.38);
+    }
+    .xpand-media img, .xpand-media video {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: 40% 62%;
+    }
+    .xpand-scrim { /* cream veil: keeps ink text readable, lifts as it expands */
+      position: absolute; inset: 0; pointer-events: none;
+      background: var(--cream);
+      opacity: calc(.42 - var(--p) * .38);
+    }
+    .xpand-title {
+      position: absolute; z-index: 2; inset-inline: 0; top: 50%;
+      transform: translateY(-50%);
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0 .5em;
+      pointer-events: none;
+      font-style: italic; font-weight: 400;
+      font-size: clamp(1.6rem, 4.6vw, 3.3rem);
+      line-height: 1.25;
+    }
+    .xpand-half { display: inline-block; white-space: nowrap; opacity: calc(1 - max(0, var(--p) - .65) * 2.9); }
+    .xpand-half-l { transform: translateX(calc(var(--p) * -58vw)); }
+    .xpand-half-r { transform: translateX(calc(var(--p) * 58vw)); }
+    .xpand-hint {
+      position: absolute; z-index: 3; inset-inline: 0;
+      bottom: max(2.5rem, 6vh);
+      bottom: max(2.5rem, 6svh);
+      text-align: center; font-size: 1.5rem;
+      opacity: calc(1 - var(--p) * 2.4);
+    }
+    .xpand-hint svg { display: block; margin: .4rem auto 0; color: var(--gold-text); }
+    .xpand-payoff {
+      position: absolute; z-index: 3; inset-inline: 0;
+      bottom: max(3rem, 9svh);
+      text-align: center;
+      visibility: hidden; /* .is-deep (JS, p > .8) reveals it, so the invisible link can't catch stray taps */
+      opacity: calc((var(--p) - .85) * 6.7);
+    }
+    .xpand.is-deep .xpand-payoff { visibility: visible; }
+    .xpand-payoff .script-accent {
+      display: block; font-size: 2rem; margin-bottom: 1rem;
+      color: var(--ink); /* gold reads faint over the bright foam; ink matches the tagline */
+      text-shadow: 0 1px 18px rgba(250,246,239,.85);
+    }
+    .xpand-payoff .btn { text-decoration: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .xpand-hint svg { animation: hint-bob 2.6s ease-in-out infinite; }
+    }
+    @keyframes hint-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+    @media (max-height: 560px) { /* landscape phones: smaller start card, no collisions */
+      .xpand-media { --xh0: clamp(180px, 52svh, 440px); }
+    }
+    /* Static composition when there's nothing to scrub: reduced motion or no JS */
+    @media (prefers-reduced-motion: reduce) {
+      .xpand { height: auto; }
+      .xpand-sticky { position: relative; }
+    }
+    html:not(.js) .xpand { height: auto; }
+    html:not(.js) .xpand-sticky { position: relative; }
+
+    /* ════════════════════════════════════════════════════════════════
+       SECTION: HERO  (Shopify port → sections/hero-waitlist.liquid)
+       Post-expansion reveal: wordmark + signup.
+       ════════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      padding: var(--space-section) 0;
+      background: var(--cream);
+    }
     .hero-inner { position: relative; z-index: 1; width: 100%; text-align: center; }
-    .hero-kicker { margin-bottom: 1.5rem; }
     .hero-wordmark {
       font-family: var(--font-script); font-weight: 400;
       font-size: clamp(4.25rem, 15vw, 10.5rem);
       line-height: 1.15;
       color: var(--ink);
       margin: 0 0 .75rem;
-      transform: translateX(-0.16em); /* optical centering: the J's swash pulls the mass right */
-    }
-    .hero-headline {
-      font-family: var(--font-serif); font-weight: 400; font-style: italic;
-      font-size: clamp(1.5rem, 3.4vw, 2.4rem);
-      line-height: 1.25;
-      color: var(--ink);
-      margin-bottom: 1.75rem;
     }
     .hero-sub {
       max-width: 38rem; margin: 0 auto 3.25rem;
@@ -240,6 +322,7 @@
       display: none; text-align: center; padding: 1.75rem 1.25rem;
       border: 1px solid var(--gold-deco); border-radius: 1rem; background: var(--surface);
     }
+    .signup-success:focus { outline: none; } /* programmatic focus target, not interactive */
     .signup-success .script-accent { font-size: 2.2rem; line-height: 1.2; display: block; margin-bottom: .35rem; }
     .signup.is-done .signup-row, .signup.is-done .signup-label,
     .signup.is-done .signup-note, .signup.is-done .signup-msg { display: none; }
@@ -329,6 +412,8 @@
       transform: rotate(45deg); flex-shrink: 0;
     }
     @keyframes marquee { to { transform: translateX(-50%); } }
+    /* WCAG 2.2.2: auto-moving content needs a pause mechanism beyond the OS flag */
+    .marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
 
     /* ════════════════════════════════════════════════════════════════
        SECTION: STORY / THE PROBLEM  (Shopify port → sections/editorial-story.liquid)
@@ -477,22 +562,40 @@
   <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
   <header class="site-header">
     <div class="container">
-      <a class="header-wordmark" href="#top" aria-label="Jilldorada home">Jilldorada</a>
-      <a class="header-cta" href="#join"><svg class="header-cta-gem" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 7 20, 3.6 15, 3 9.5 C 6 5.5, 18 5.5, 21 9.5 C 20.4 15, 17 20, 12 21 Z"/><path d="M12 21 L6.8 8.2"/><path d="M12 21 L12 6.4"/><path d="M12 21 L17.2 8.2"/></svg>Be first</a>
+      <a class="header-wordmark" href="#top" aria-label="Braeswim home">Braeswim</a>
+      <a class="header-cta" href="#signup"><svg class="header-cta-gem" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 7 20, 3.6 15, 3 9.5 C 6 5.5, 18 5.5, 21 9.5 C 20.4 15, 17 20, 12 21 Z"/><path d="M12 21 L6.8 8.2"/><path d="M12 21 L12 6.4"/><path d="M12 21 L17.2 8.2"/></svg>Be first</a>
     </div>
   </header>
 
   <main id="main">
+    <!-- ═══ SCROLL-EXPAND OPENER ═══════════════════════════════════ -->
+    <section class="xpand" id="top" data-xpand>
+      <div class="xpand-sticky">
+        <p class="micro xpand-kicker">Swim &middot; Coming soon</p>
+        <p class="xpand-title serif-h"><span class="xpand-half xpand-half-l">Made to flatter.</span> <span class="xpand-half xpand-half-r">Built to hold.</span></p>
+        <figure class="xpand-media">
+          <!-- Placeholder: golden-hour shore (Unsplash, free license, photo-1476673160081).
+               When the sample film exists, swap the <img> for:
+               <video src="assets/hero.mp4" poster="assets/hero-shore.jpg" autoplay muted loop playsinline></video> -->
+          <img src="assets/hero-shore.jpg" alt="Golden hour surf rolling onto warm sand" fetchpriority="high">
+          <span class="xpand-scrim" aria-hidden="true"></span>
+        </figure>
+        <p class="xpand-hint script-accent">scroll to dive in<svg aria-hidden="true" width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2 L11 10 L20 2"/></svg></p>
+        <div class="xpand-payoff">
+          <span class="script-accent">come on in.</span>
+          <a class="btn" href="#signup">Join the waitlist</a>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══ HERO ═══════════════════════════════════════════════════ -->
-    <section class="hero" id="top">
+    <section class="hero" id="signup">
       <div class="container hero-inner">
-        <p class="micro hero-kicker">Swim &middot; Coming soon</p>
-        <h1 class="hero-wordmark">Jilldorada</h1>
-        <p class="hero-headline serif-h">Made to flatter. Built to hold.</p>
+        <h1 class="hero-wordmark">Braeswim</h1>
         <p class="hero-sub">A triangle bikini built on lingerie engineering. All-day comfort, effortlessly sexy, in every size A&nbsp;to&nbsp;H.</p>
 
         <!-- Signup #1 · list lives in Kit → portable to Shopify untouched -->
-        <form class="signup" data-signup novalidate>
+        <form class="signup" data-signup action="https://app.kit.com/forms/9666887/subscriptions" method="post">
           <label class="micro signup-label" for="email-hero">Email</label>
           <div class="signup-row">
             <input id="email-hero" name="email_address" type="email" autocomplete="email" inputmode="email" required placeholder="you@goldenhour.com">
@@ -501,13 +604,13 @@
               <span class="btn-label">Sign up</span>
             </button>
           </div>
-          <p class="signup-note">Sign up and receive early access + 10% off the first drop.</p>
+          <p class="signup-note">Early access + 10% off the first drop.</p>
           <p class="signup-msg" role="status" aria-live="polite"></p>
-          <div class="signup-success">
+          <div class="signup-success" tabindex="-1">
             <span class="script-accent">golden.</span>
-            <p>You&rsquo;re on the list! Keep an eye on your emails for updates and discounts.</p>
+            <p>You&rsquo;re on the list. Watch your inbox for what&rsquo;s coming, and your 10% off.</p>
             <div class="success-step" data-size-step>
-              <p class="success-lede">One thing that helps: your size, so it&rsquo;s cut and waiting on day one.</p>
+              <p class="success-lede">One thing that helps: your size, so we know exactly what to cut first.</p>
               <div class="size-row">
                 <select data-band aria-label="Band size">
                   <option value="" selected>Band</option>
@@ -521,7 +624,7 @@
                 </select>
                 <button type="button" class="btn-ghost" data-size-save>Save my size</button>
               </div>
-              <p class="success-saved" data-size-saved hidden></p>
+              <p class="success-saved" role="status" data-size-saved hidden></p>
             </div>
             <div class="success-step">
               <p class="success-lede">Know someone who&rsquo;s given up on triangle tops? Send her this.</p>
@@ -544,7 +647,7 @@
           <span class="marquee-item">Slim straps, no dig</span>
           <span class="marquee-item">Bra-grade engineering</span>
           <span class="marquee-item">Tan lines, by design</span>
-          <span class="marquee-item">Recycled ocean nylon</span>
+          <span class="marquee-item">Your bra size is your size</span>
         </div>
         <div class="marquee-group" aria-hidden="true">
           <span class="marquee-item">Nothing spills</span>
@@ -552,7 +655,7 @@
           <span class="marquee-item">Slim straps, no dig</span>
           <span class="marquee-item">Bra-grade engineering</span>
           <span class="marquee-item">Tan lines, by design</span>
-          <span class="marquee-item">Recycled ocean nylon</span>
+          <span class="marquee-item">Your bra size is your size</span>
         </div>
       </div>
     </aside>
@@ -562,8 +665,8 @@
       <div class="container story-inner reveal">
         <span class="micro">Our vision</span>
         <h2 class="serif-h story-quote">You could have pretty.<br>You could have support.<br>Never both. <em>Until now.</em></h2>
-        <p><strong>The way we see it:</strong> most bikinis are only meant for one body style. That&rsquo;s why they gap, shift, and spill. It was never your body&rsquo;s issue, rather the companies who made it.</p>
-        <p>Founded and created by Jillian, a Malibu native who grew up in the water but could never find a suit that supported her style. By mixing California surf with lingerie, Jilldorada is meant to be surfed, tanned, and stunned&nbsp;in.</p>
+        <p><strong>The way we see it:</strong> most bikinis are cut for one body, and only one. That&rsquo;s why they gap, shift, and spill. Your body was never the problem. The suit was.</p>
+        <p>Braeswim is Braeden, a college student engineering the most comfortable bikini ever made and sharing every step as he goes. Every seam is borrowed from fine lingerie and tested on real bodies before anything ships. Made to be surfed, tanned, and stunned&nbsp;in.</p>
         <div class="hairline" aria-hidden="true"></div>
       </div>
     </section>
@@ -590,7 +693,7 @@
               </svg>
             </div>
             <h3>The band</h3>
-            <p>A powermesh underband with a real hook-and-eye carries about 80% of the weight. Bra physics, invisible in a bikini.</p>
+            <p>A powermesh underband with a real hook-and-eye carries about 80% of the weight. The support of a real bra, invisible in a bikini.</p>
           </article>
           <article class="feature-card reveal">
             <div class="feature-icon" aria-hidden="true">
@@ -639,7 +742,7 @@
         <span class="micro">FAQ</span>
         <details>
           <summary>How does sizing work?</summary>
-          <p>It&rsquo;s your bra size, the one that fits you in beautiful lingerie. No conversion charts, no ordering two up.</p>
+          <p>It&rsquo;s your bra size, the one that fits you in beautiful lingerie. No conversion charts, no ordering two up. Every letter from A to H, DD included.</p>
         </details>
         <details>
           <summary>When does the first collection drop?</summary>
@@ -647,7 +750,7 @@
         </details>
         <details>
           <summary>What will it cost?</summary>
-          <p>Under $100 for the top, priced for the engineering it carries. Every size pays the same.</p>
+          <p>Under $100 for the top, priced for the engineering it carries. Matching bottoms launch alongside, sold separately. Every size pays the same.</p>
         </details>
         <details>
           <summary>What if it doesn&rsquo;t fit?</summary>
@@ -660,11 +763,11 @@
     <section class="cta" id="join">
       <div class="container reveal">
         <span class="script-accent">get in before the tide</span>
-        <h2 class="serif-h">The Megan collection arrives here first.</h2>
-        <p class="cta-sub">The list shops every drop first, with founding pricing and rewards for being early. Every size, A&ndash;H.</p>
+        <h2 class="serif-h">The debut collection arrives here first.</h2>
+        <p class="cta-sub">The list shops every drop first, with early access and 10% off the debut. One design language, A&ndash;H.</p>
 
         <!-- Signup #2 -->
-        <form class="signup" data-signup novalidate>
+        <form class="signup" data-signup action="https://app.kit.com/forms/9666887/subscriptions" method="post">
           <label class="micro signup-label" for="email-cta">Email</label>
           <div class="signup-row">
             <input id="email-cta" name="email_address" type="email" autocomplete="email" inputmode="email" required placeholder="you@goldenhour.com">
@@ -673,13 +776,13 @@
               <span class="btn-label">Sign up</span>
             </button>
           </div>
-          <p class="signup-note">Sign up and receive early access + 10% off the first drop.</p>
+          <p class="signup-note">Early access + 10% off the first drop.</p>
           <p class="signup-msg" role="status" aria-live="polite"></p>
-          <div class="signup-success">
+          <div class="signup-success" tabindex="-1">
             <span class="script-accent">golden.</span>
-            <p>You&rsquo;re on the list! Keep an eye on your emails for updates and discounts.</p>
+            <p>You&rsquo;re on the list. Watch your inbox for what&rsquo;s coming, and your 10% off.</p>
             <div class="success-step" data-size-step>
-              <p class="success-lede">One thing that helps: your size, so it&rsquo;s cut and waiting on day one.</p>
+              <p class="success-lede">One thing that helps: your size, so we know exactly what to cut first.</p>
               <div class="size-row">
                 <select data-band aria-label="Band size">
                   <option value="" selected>Band</option>
@@ -693,7 +796,7 @@
                 </select>
                 <button type="button" class="btn-ghost" data-size-save>Save my size</button>
               </div>
-              <p class="success-saved" data-size-saved hidden></p>
+              <p class="success-saved" role="status" data-size-saved hidden></p>
             </div>
             <div class="success-step">
               <p class="success-lede">Know someone who&rsquo;s given up on triangle tops? Send her this.</p>
@@ -711,24 +814,21 @@
   <!-- ═══ FOOTER ═══════════════════════════════════════════════════ -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p class="footer-wordmark">Jilldorada</p>
+      <p class="footer-wordmark">Braeswim</p>
       <nav class="footer-links" aria-label="Social links">
-        <a href="#" data-todo="instagram">Instagram</a>
-        <a href="#" data-todo="tiktok">TikTok</a>
+        <a href="https://www.instagram.com/braeswims" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@braeswims" target="_blank" rel="noopener">TikTok</a>
         <a href="mailto:hello@example.com" data-todo="email">Contact</a>
       </nav>
-      <p class="footer-fine">&copy; <span data-year>2026</span> Jilldorada. Swim, engineered.</p>
+      <p class="footer-fine">&copy; <span data-year>2026</span> Braeswim. Swim, engineered.</p>
     </div>
   </footer>
 
   <script>
     /* ══════════════════════════════════════════════════════════════
-       KIT (ConvertKit) SETUP - the only wiring needed before launch.
-       1. Create a free account at kit.com
-       2. Create an inline Form, copy its numeric ID
-          (the URL looks like app.kit.com/forms/designers/1234567/edit)
-       3. Paste the ID below, e.g. const KIT_FORM_ID = "1234567";
-       The same Kit form drops into Shopify later - the list carries over.
+       KIT (ConvertKit) - form 9666887, wired and tested live 2026-07-09
+       (real signup verified). The list lives in Kit, so it ports to
+       Shopify later untouched. See README section 2 for reference.
        ══════════════════════════════════════════════════════════════ */
     const KIT_FORM_ID = "9666887";
 
@@ -741,13 +841,50 @@
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
     // Success choreography: fade the form out, stagger the card in, gold dust up
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const prefersReducedMotion = reducedMotionQuery.matches;
+
+    // Scroll-expand opener: scrub --p (0→1) from native scroll position.
+    // Reduced motion gets the static composition instead (CSS handles it).
+    const xpand = document.querySelector('[data-xpand]');
+    if (xpand && !prefersReducedMotion) {
+      let xpTicking = false;
+      const setProgress = () => {
+        xpTicking = false;
+        // Reach full size at 82% of the runway so the expanded image
+        // holds for a beat before the page scrolls on.
+        const runway = (xpand.offsetHeight - window.innerHeight) * 0.82;
+        const scrolled = -xpand.getBoundingClientRect().top;
+        const p = runway > 0 ? Math.min(Math.max(scrolled / runway, 0), 1) : 1;
+        xpand.style.setProperty('--p', p.toFixed(4));
+        xpand.classList.toggle('is-deep', p > 0.85);
+      };
+      const queueProgress = () => {
+        if (!xpTicking) { xpTicking = true; requestAnimationFrame(setProgress); }
+      };
+      window.addEventListener('scroll', queueProgress, { passive: true });
+      window.addEventListener('resize', queueProgress, { passive: true });
+      setProgress();
+      // If Reduce Motion turns on mid-session the CSS collapses the runway;
+      // unbind and reset so the static composition isn't left mid-scrub.
+      reducedMotionQuery.addEventListener('change', (e) => {
+        if (!e.matches) return;
+        window.removeEventListener('scroll', queueProgress);
+        window.removeEventListener('resize', queueProgress);
+        xpand.style.removeProperty('--p');
+        xpand.classList.remove('is-deep');
+      });
+    }
     function celebrate(form) {
-      if (prefersReducedMotion) { form.classList.add('is-done'); return; }
+      // Focus the success card so keyboard focus isn't dropped and screen
+      // readers announce the confirmation.
+      const announce = () => form.querySelector('.signup-success').focus();
+      if (prefersReducedMotion) { form.classList.add('is-done'); announce(); return; }
       form.classList.add('is-leaving');
       setTimeout(() => {
         form.classList.remove('is-leaving');
         form.classList.add('is-done');
+        announce();
         const dust = document.createElement('div');
         dust.className = 'gold-dust';
         dust.setAttribute('aria-hidden', 'true');
@@ -765,6 +902,7 @@
 
     // Signup forms
     document.querySelectorAll('[data-signup]').forEach((form) => {
+      form.setAttribute('novalidate', ''); // JS validates; native action stays as the no-JS fallback
       const input = form.querySelector('input[type="email"]');
       const btn = form.querySelector('.btn');
       const msg = form.querySelector('.signup-msg');
@@ -797,7 +935,9 @@
         }
         form.querySelector('.size-row').hidden = true;
         savedMsg.hidden = false;
-        savedMsg.textContent = `Noted. ${size} will be cut and waiting.`;
+        savedMsg.textContent = `Noted. ${size} just moved up the cut list.`;
+        savedMsg.setAttribute('tabindex', '-1');
+        savedMsg.focus(); // the button that had focus was just hidden
       });
 
       // Post-signup extras - share prompt (native share, clipboard fallback)
@@ -806,7 +946,7 @@
       const copyBtn = form.querySelector('[data-copy]');
       form.querySelector('[data-share]').addEventListener('click', async () => {
         if (navigator.share) {
-          try { await navigator.share({ title: 'Jilldorada', text: shareText, url: shareUrl() }); } catch (_) {}
+          try { await navigator.share({ title: 'Braeswim', text: shareText, url: shareUrl() }); } catch (_) {}
         } else {
           copyBtn.click();
         }
